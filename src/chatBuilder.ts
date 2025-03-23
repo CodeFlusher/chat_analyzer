@@ -19,8 +19,7 @@ interface IChatBuilder {
 	from(date: Date | string): this;
 	to(date: Date | string): this;
 	getChunked(by?: number): MessageChunk[];
-	getRaw(): Message[];
-	getFormatted(): FormattedMessage[];
+	build(): Message[];
 }
 
 class ChatBuilder implements IChatBuilder {
@@ -30,10 +29,17 @@ class ChatBuilder implements IChatBuilder {
 		this.chatMessages = messages;
 	}
 
-	by(name: string): this {
-		this.chatMessages = this.chatMessages.filter(
-			(message) => message.from === name,
-		);
+	by(name: string | string[]): this {
+		if (Array.isArray(name)) {
+			this.chatMessages = this.chatMessages.filter((message) =>
+				name.includes(message.from ?? "NOT EXIST"),
+			);
+		} else {
+			this.chatMessages = this.chatMessages.filter(
+				(message) => message.from === name,
+			);
+		}
+
 		return this;
 	}
 
@@ -74,17 +80,8 @@ class ChatBuilder implements IChatBuilder {
 		return result;
 	}
 
-	getRaw(): Message[] {
+	build(): Message[] {
 		return this.chatMessages;
-	}
-
-	getFormatted(): FormattedMessage[] {
-		return this.chatMessages.map((message) => {
-			return {
-				name: message.from,
-				message: message.text,
-			} as FormattedMessage;
-		});
 	}
 }
 
