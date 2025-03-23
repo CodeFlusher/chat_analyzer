@@ -1,11 +1,11 @@
-export interface Chat {
+export interface TgChat {
   id: number;
   messages: Message[];
   name: string;
   type: string;
 }
 
-interface Message {
+export interface Message {
   id: number;
   type: string;
   date: Date; // TODO: convert to Date type

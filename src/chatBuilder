@@ -1,0 +1,61 @@
+import dayjs from "dayjs";
+import type { Message, TgChat } from "../types";
+
+interface FormattedMessage {
+	name: string;
+	message: string;
+}
+
+class ChatMessages {
+	data: Message[];
+	constructor(messages: Message[]) {
+		this.data = messages;
+	}
+}
+
+interface Builder {
+	by(name: string): this;
+	from(date: Date): this;
+	to(date: Date): this;
+	getResult(): FormattedMessage[];
+}
+
+class ChatBuilder implements Builder {
+	private chatMessages: Message[];
+
+	constructor(messages: Message[]) {
+		this.chatMessages = messages;
+	}
+
+	by(name: string): this {
+		this.chatMessages = this.chatMessages.filter(
+			(message) => message.from === name,
+		);
+		return this;
+	}
+
+	from(date: Date): this {
+		this.chatMessages = this.chatMessages.filter((message) =>
+			dayjs(message.date).isAfter(dayjs(date)),
+		);
+		return this;
+	}
+
+	to(date: Date): this {
+		this.chatMessages = this.chatMessages.filter((message) =>
+			dayjs(message.date).isBefore(dayjs(date)),
+		);
+		return this;
+	}
+
+	getResult(): FormattedMessage[] {
+		return this.chatMessages.map((message) => {
+			return {
+				name: message.from,
+				message: message.text,
+			} as FormattedMessage;
+		});
+	}
+}
+
+export { ChatBuilder };
