@@ -1,30 +1,11 @@
 import "dotenv/config";
-import { run } from "./ai";
-import { getChatData } from "./src/chatBuilder";
+import type { Message, TgChat } from "./types";
+import { ChatBuilder } from "./src/chatBuilder";
+import dayjs from "dayjs";
 
-const file = await getChatData();
+const messages: TgChat = await Bun.file("result.json").json();
 
-// const from = new Date();
-// from.setHours(from.getHours() - 2);
-// console.log(from);
+const yesterday = dayjs().subtract(1, "day");
 
-// const messages = file.messages.map((message) => ({
-//   ...message,
-//   date: new Date(message.date),
-// }));
-
-// const b = messages.filter((message) => messag);
-
-const a = file.messages
-	.filter((message) => message.from === "sova")
-	.map((message) => {
-		return {
-			name: message.from,
-			message: message.text,
-		};
-	});
-
-const b = a.slice(6000);
-
-console.log(b.length);
-run(b);
+const chat = new ChatBuilder(messages.messages);
+console.log(chat);

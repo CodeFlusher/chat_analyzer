@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "compileWin": "bun build ./index.ts --minify --compile --target=bun-windows-x64-modern",
     "compileLin": "bun build ./index.ts --minify --compile --target=bun-linux-x64-modern",
