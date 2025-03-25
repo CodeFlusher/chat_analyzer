@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import * as p from '@clack/prompts';
 import dayjs from 'dayjs';
+import color from 'picocolors';
 import type { Message, TgChat } from '../types';
 import { AiModule } from './aiModule';
 import { MistralAiProvider } from './aiProviders/mistral';
 import { ChatBuilder, type FormattedMessage } from './chatBuilder';
-import color from 'picocolors';
 
 p.intro(`${color.inverse('AI Chat Summarizer')} (made by ncesova and CodeFlusher`);
 
@@ -140,7 +140,7 @@ if (filteredMessages.length === 0) {
 // Bun.write("output.json", JSON.stringify(filteredMessages))
 
 const aiSpinner = p.spinner();
-aiSpinner.start('Generating response...');
+aiSpinner.start('Generating response');
 const mistral = new MistralAiProvider();
 const aiModule = new AiModule(mistral);
 const response = await aiModule.getProfile(JSON.stringify(filteredMessages));
