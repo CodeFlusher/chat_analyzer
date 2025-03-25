@@ -5,7 +5,7 @@ export interface TgChat {
 	type: string;
 }
 
-export interface Message {
+export type Message = {
 	id: number;
 	type: string;
 	date: Date | string; // TODO: convert to Date type

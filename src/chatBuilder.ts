@@ -1,10 +1,14 @@
 import dayjs from "dayjs";
 import type { Message, TgChat } from "../types";
 import isBetween from "dayjs/plugin/isBetween";
+import { messagesFromJSON } from "@mistralai/mistralai/models/components";
 dayjs.extend(isBetween);
 
-interface FormattedMessage {
+export type FormattedMessage = {
 	name: string;
+	reply_to?: string;
+	reply_original_message: string;
+	date: string;
 	message: string;
 }
 
@@ -29,6 +33,17 @@ class ChatBuilder implements IChatBuilder {
 		this.chatMessages = messages;
 	}
 
+	byId(username: string): this {
+		
+		this.chatMessages = this.chatMessages.filter(message => {
+			if(!message.from_id){
+				return false;	
+			}
+			return message.from_id.indexOf(username) !== -1
+		})
+		return this;
+	}
+
 	by(name: string | string[]): this {
 		if (Array.isArray(name)) {
 			this.chatMessages = this.chatMessages.filter((message) =>
@@ -36,7 +51,12 @@ class ChatBuilder implements IChatBuilder {
 			);
 		} else {
 			this.chatMessages = this.chatMessages.filter(
-				(message) => message.from === name,
+				(message) => {
+					if(!message.from){
+						return false
+					}
+					return message.from.indexOf(name) !== -1
+				},
 			);
 		}
 

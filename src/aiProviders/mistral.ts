@@ -1,6 +1,8 @@
 import { Mistral } from "@mistralai/mistralai";
 import type { AiProvider } from "../aiModule";
 
+let temperature = Number.parseFloat((Bun.argv.find(item => item.indexOf('--temperature=') !== -1) ?? "--temperature=0.5").split("=")[1])
+
 export class MistralAiProvider implements AiProvider {
 	mistral: Mistral;
 	constructor() {
@@ -12,10 +14,10 @@ export class MistralAiProvider implements AiProvider {
 	async generate(prompt: string, messages: string): Promise<string> {
 		const response = await this.mistral.chat.complete({
 			model: "mistral-large-latest",
-			temperature: 0.5,
+			temperature: temperature,
 			messages: [
 				{
-					content: `${prompt} для ссылок используй формат https://t.me/c/<chatId>/<messsage_id>`,
+					content: `${prompt}`,
 					role: "system",
 				},
 				{
