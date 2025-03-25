@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import color from 'picocolors';
 import type { Message, TgChat } from '../types';
 import { AiModule } from './aiModule';
-import { MistralAiProvider } from './aiProviders/mistral';
+import { MistralAiProvider } from './providers/mistral';
 import { ChatBuilder, type FormattedMessage } from './chatBuilder';
 
 p.intro(`${color.inverse('AI Chat Summarizer')} (made by ncesova and CodeFlusher`);
@@ -28,7 +28,6 @@ const { by, days } = await p.group(
 					await p.text({
 						message: 'Enter amount of days from today to filter',
 						placeholder: '3',
-						initialValue: '3',
 						validate: (message) => {
 							if (message.length === 0) return 'Amount of days is required!';
 							//TODO: implement number validation
