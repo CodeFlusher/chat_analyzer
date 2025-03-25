@@ -7,7 +7,7 @@ import { MistralAiProvider } from './aiProviders/mistral';
 import { ChatBuilder, type FormattedMessage } from './chatBuilder';
 import color from 'picocolors';
 
-p.intro(color.inverse('AI Chat Summarizer (made by ncesova and CodeFlusher'));
+p.intro(`${color.inverse('AI Chat Summarizer')} (made by ncesova and CodeFlusher`);
 
 const { by, days } = await p.group(
 	{
@@ -50,6 +50,7 @@ const { filterBy, isById, file } = await p.group(
 			p.select({
 				//or use multiselect @see https://github.com/bombshell-dev/clack/tree/main/packages/prompts#multi-select
 				message: 'Filter by (not working. Just example)',
+				initialValue: 'username',
 				options: [
 					{ value: 'id', label: 'Telegram Id', hint: '234234423423' },
 					{ value: 'name', label: 'Public name', hint: 'Sova' },
@@ -68,6 +69,7 @@ const { filterBy, isById, file } = await p.group(
 				await p.text({
 					message: 'Name of telegram export .json file',
 					initialValue: 'result.json',
+					placeholder: 'result.json',
 					validate: (message) => {
 						if (message.slice(-5, 0) === '.json') {
 							return message;
@@ -83,6 +85,8 @@ const { filterBy, isById, file } = await p.group(
 		},
 	}
 );
+
+console.log(file);
 
 const spinner = p.spinner();
 
