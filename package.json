@@ -3,12 +3,16 @@
   "scripts": {
     "compileWin": "bun build ./index.ts --minify --compile --target=bun-windows-x64-modern",
     "compileLin": "bun build ./index.ts --minify --compile --target=bun-linux-x64-modern",
-    "build": "bun build --entrypoints ./index.ts --outdir ./out"
+    "build": "bun build --entrypoints ./index.ts --outdir ./out",
+    "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@elysiajs/swagger": "^1.2.2",
     "@mistralai/mistralai": "^1.5.2",
     "@types/bun": "^1.2.5",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "elysia": "^1.2.25"
   }
 }
