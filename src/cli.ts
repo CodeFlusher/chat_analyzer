@@ -1,16 +1,16 @@
-import "dotenv/config";
-import type { Message, TgChat } from "../types";
-import { ChatBuilder } from "./chatBuilder";
-import dayjs from "dayjs";
-import { AiModule } from "./aiModule";
-import { MistralAiProvider } from "./aiProviders/mistral";
+import 'dotenv/config';
+import dayjs from 'dayjs';
+import type { Message, TgChat } from '../types';
+import { AiModule } from './aiModule';
+import { MistralAiProvider } from './aiProviders/mistral';
+import { ChatBuilder } from './chatBuilder';
 
-const messages: TgChat = await Bun.file("result.json").json();
+const messages: TgChat = await Bun.file('result.json').json();
 
-const yesterday = dayjs().subtract(30, "day").toDate();
+const yesterday = dayjs().subtract(30, 'day').toDate();
 
 const filteredMessages = new ChatBuilder(messages.messages)
-	.by("Andrei Hudalla")
+	.by('Andrei Hudalla')
 	.from(yesterday)
 	.build()
 	.map((message) => ({

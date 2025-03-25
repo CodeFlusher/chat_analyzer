@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
-import type { Message, TgChat } from "../types";
-import isBetween from "dayjs/plugin/isBetween";
-import { messagesFromJSON } from "@mistralai/mistralai/models/components";
+import { messagesFromJSON } from '@mistralai/mistralai/models/components';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import type { Message, TgChat } from '../types';
 dayjs.extend(isBetween);
 
 export type FormattedMessage = {
@@ -10,7 +10,7 @@ export type FormattedMessage = {
 	reply_original_message: string;
 	date: string;
 	message: string;
-}
+};
 
 interface MessageChunk {
 	from: Date;
@@ -34,30 +34,27 @@ class ChatBuilder implements IChatBuilder {
 	}
 
 	byId(username: string): this {
-		
-		this.chatMessages = this.chatMessages.filter(message => {
-			if(!message.from_id){
-				return false;	
+		this.chatMessages = this.chatMessages.filter((message) => {
+			if (!message.from_id) {
+				return false;
 			}
-			return message.from_id.indexOf(username) !== -1
-		})
+			return message.from_id.indexOf(username) !== -1;
+		});
 		return this;
 	}
 
 	by(name: string | string[]): this {
 		if (Array.isArray(name)) {
 			this.chatMessages = this.chatMessages.filter((message) =>
-				name.includes(message.from ?? "NOT EXIST"),
+				name.includes(message.from ?? 'NOT EXIST')
 			);
 		} else {
-			this.chatMessages = this.chatMessages.filter(
-				(message) => {
-					if(!message.from){
-						return false
-					}
-					return message.from.indexOf(name) !== -1
-				},
-			);
+			this.chatMessages = this.chatMessages.filter((message) => {
+				if (!message.from) {
+					return false;
+				}
+				return message.from.indexOf(name) !== -1;
+			});
 		}
 
 		return this;
@@ -65,14 +62,14 @@ class ChatBuilder implements IChatBuilder {
 
 	from(date: Date | string): this {
 		this.chatMessages = this.chatMessages.filter((message) =>
-			dayjs(message.date).isAfter(dayjs(date)),
+			dayjs(message.date).isAfter(dayjs(date))
 		);
 		return this;
 	}
 
 	to(date: Date | string): this {
 		this.chatMessages = this.chatMessages.filter((message) =>
-			dayjs(message.date).isBefore(dayjs(date)),
+			dayjs(message.date).isBefore(dayjs(date))
 		);
 		return this;
 	}
@@ -80,7 +77,7 @@ class ChatBuilder implements IChatBuilder {
 	getChunked(by = 1): MessageChunk[] {
 		const messagesCopy = this.chatMessages.toReversed();
 		let dateFrom = dayjs(messagesCopy.at(0)?.date);
-		let dateTo = dateFrom.subtract(by, "hour");
+		let dateTo = dateFrom.subtract(by, 'hour');
 		const result: MessageChunk[] = [];
 		let buffer: Message[] = [];
 		for (const message of messagesCopy) {
@@ -93,8 +90,8 @@ class ChatBuilder implements IChatBuilder {
 					content: buffer,
 				});
 				buffer = [message];
-				dateTo = dateTo.subtract(1, "hour");
-				dateFrom = dateFrom.subtract(1, "hour");
+				dateTo = dateTo.subtract(1, 'hour');
+				dateFrom = dateFrom.subtract(1, 'hour');
 			}
 		}
 		return result;

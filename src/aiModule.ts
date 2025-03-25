@@ -1,4 +1,4 @@
-import { AnalyzePrompt } from "./prompts";
+import { AnalyzePrompt } from './prompts';
 
 export interface AiProvider {
 	generate(prompt: string, messages: string): Promise<string>;
