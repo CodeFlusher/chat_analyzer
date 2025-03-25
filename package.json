@@ -4,7 +4,8 @@
     "compileWin": "bun build ./src/index.ts --minify --compile --target=bun-windows-x64-modern",
     "compileLin": "bun build ./src/index.ts --minify --compile --target=bun-linux-x64-modern",
     "build": "bun build --entrypoints ./index.ts --outdir ./out",
-    "lint": "bunx biome check --write ./src/* "
+    "lint": "bunx biome check --write ./src/*",
+    "start": "bun src/index"
   },
   "dependencies": {
     "@clack/core": "^0.4.1",

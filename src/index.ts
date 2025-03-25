@@ -11,6 +11,7 @@ p.intro(`${color.inverse('AI Chat Summarizer')} (made by ncesova and CodeFlusher
 
 const { by, days } = await p.group(
 	{
+		//TODO: add username fuzzy search
 		by: async () =>
 			String(
 				await p.text({
@@ -43,20 +44,20 @@ const { by, days } = await p.group(
 		},
 	}
 );
-const { filterBy, isById, file } = await p.group(
+const { isById, file } = await p.group(
 	{
-		filterBy: () =>
-			//TODO: implement advanced filtering
-			p.select({
-				//or use multiselect @see https://github.com/bombshell-dev/clack/tree/main/packages/prompts#multi-select
-				message: 'Filter by (not working. Just example)',
-				initialValue: 'username',
-				options: [
-					{ value: 'id', label: 'Telegram Id', hint: '234234423423' },
-					{ value: 'name', label: 'Public name', hint: 'Sova' },
-					{ value: 'username', label: 'Username', hint: '@ncesova' },
-				],
-			}),
+		// filterBy: () =>
+		// 	//TODO: implement advanced filtering
+		// 	p.select({
+		// 		//or use multiselect @see https://github.com/bombshell-dev/clack/tree/main/packages/prompts#multi-select
+		// 		message: 'Filter by (not working. Just example)',
+		// 		initialValue: 'username',
+		// 		options: [
+		// 			{ value: 'id', label: 'Telegram Id', hint: '234234423423' },
+		// 			{ value: 'name', label: 'Public name', hint: 'Sova' },
+		// 			{ value: 'username', label: 'Username', hint: '@ncesova' },
+		// 		],
+		// 	}),
 		isById: () =>
 			p.confirm({
 				message: 'Filter users by telegram id?',
@@ -71,8 +72,8 @@ const { filterBy, isById, file } = await p.group(
 					initialValue: 'result.json',
 					placeholder: 'result.json',
 					validate: (message) => {
-						if (message.slice(-5, 0) === '.json') {
-							return message;
+						if (message.slice(-5) !== '.json') {
+							return 'File must be .json';
 						}
 					},
 				})
@@ -86,14 +87,12 @@ const { filterBy, isById, file } = await p.group(
 	}
 );
 
-console.log(file);
+p.log.info(`Searching for messages from ${by} for the last ${days} day(s)...`);
 
-const spinner = p.spinner();
-
-spinner.start(`Reading ${file}...`);
+p.log.step(`Reading ${file}...`);
 const messages: TgChat = await Bun.file(file).json();
 
-spinner.message('Mapping messages...');
+p.log.step('Mapping messages...');
 const messageMap = new Map<number, Message>();
 for (const message of messages.messages) {
 	messageMap.set(message.id, message);
@@ -101,7 +100,7 @@ for (const message of messages.messages) {
 
 const yesterday = dayjs().subtract(days, 'day').toDate();
 
-spinner.message(`Filtering Messages from: '${by}'`);
+p.log.step(`Filtering Messages from: '${by}'`);
 
 let chatBuilder = new ChatBuilder(messages.messages);
 
@@ -131,9 +130,13 @@ const filteredMessages = chatBuilder
 		return filteredMessage;
 	});
 
-spinner.stop('Successfully filtered messages!');
+if (filteredMessages.length === 0) {
+	p.cancel('Messages not found :(');
+	process.exit(0);
+} else {
+	p.log.success(`Successfully found ${filteredMessages.length} messages!`);
+}
 
-p.log.info(`${filteredMessages.length}`);
 // Bun.write("output.json", JSON.stringify(filteredMessages))
 
 const aiSpinner = p.spinner();
