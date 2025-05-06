@@ -15,19 +15,29 @@ export class GemmaProvider implements AiProvider {
     }
 
     async generate(prompt: string, messages: string): Promise<string> {
-        const res = await fetch(`http://localhost:${this.port}/api/generate`, {
+        const res = await fetch(`http://localhost:${this.port}/api/chat`, {
             method: "POST",
             body: JSON.stringify({
                 model: "gemma3",
                 temperature: temperature,
-                prompt: `${messages}\n\n ${prompt}`,
+                messages: [
+                    {
+                        content: `${prompt}`,
+                        role: 'system',
+                    },
+                    {
+                        content: messages,
+                        role: 'user',
+                    },
+                ],
                 stream: false
             }),
             headers: {
                 "Content-Type": "application/json",
             }
         })
-        return (await res.json()).response
+        const jsonData = (await res.json());
+        return jsonData.message.content;
     }
 
 }

@@ -1,4 +1,5 @@
 export const AnalyzePrompt = `
+Act as intelligent system, that gives a review on a chat user. Your response is only an analysis. Write in russian
 Using messages, given as a JSON object array, create a summary of a chat user with given criterias
 
 1. User's chat temper
@@ -56,5 +57,5 @@ User tends to stand on his opinion
 Do not give timestamps, time, date in any of response
 Give as much examples as you can find
 Usually messages is being sent in groups, so messages that sent closely in time might be linked
-Your response should be written only in Russian language
+Respond only and only in Russian Language
 `;
