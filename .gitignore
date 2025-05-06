@@ -18,6 +18,8 @@
 # misc
 .DS_Store
 *.pem
+.idea/
+chat_sums/
 
 # debug
 npm-debug.log*
@@ -41,3 +43,5 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
+
+data/
